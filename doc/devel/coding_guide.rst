@@ -388,6 +388,9 @@ a dot-separated path to the module and function, eg.
 
   nosetests matplotlib.tests.test_simplification:test_clipping
 
+Running tests by any means other than `matplotlib.test()` 
+does not load the nose "knownfailureif" (Known failing tests) plugin, 
+causing known-failing tests to fail for real.
 
 Writing a simple test
 ---------------------
