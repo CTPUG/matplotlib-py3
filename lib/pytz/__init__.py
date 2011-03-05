@@ -26,7 +26,11 @@ __all__ = [
     ]
 
 import sys, datetime, os.path, gettext
-from UserDict import DictMixin
+
+try:  
+    from UserDict import DictMixin
+except ImportError:
+    from collections import Mapping as DictMixin
 
 try:
     from pkg_resources import resource_stream
