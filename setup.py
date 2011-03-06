@@ -37,6 +37,7 @@ try:
     from distutils.command.build_py import build_py_2to3 as build_py
 except ImportError:
     from distutils.command.build_py import build_py
+from distutils import sysconfig
 from setupext import build_agg, build_gtkagg, build_tkagg,\
      build_macosx, build_ft2font, build_image, build_windowing, build_path, \
      build_contour, build_delaunay, build_gdk, \
@@ -67,6 +68,18 @@ packages = [
     'matplotlib.tri',
 
     ]
+
+# Remove the -Wstrict-prototypesoption, is it's not valid for C++
+customize_compiler = sysconfig.customize_compiler
+def my_customize_compiler(compiler):
+    retval = customize_compiler(compiler)
+    try:
+        compiler.compiler_so.remove('-Wstrict-prototypes')
+    except (ValueError, AttributeError):
+        pass
+    return retval
+
+sysconfig.customize_compiler = my_customize_compiler
 
 py_modules = ['pylab']
 
