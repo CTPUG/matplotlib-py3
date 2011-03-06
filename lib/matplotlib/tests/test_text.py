@@ -1,3 +1,4 @@
+import os.path
 import numpy as np
 import matplotlib
 from matplotlib.testing.decorators import image_comparison, knownfailureif
@@ -5,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 @image_comparison(baseline_images=['font_styles'])
-def test_font_styles():
+def test_font_styles(image_path):
     from matplotlib.font_manager import FontProperties
 
     fig = plt.figure()
@@ -62,10 +63,10 @@ def test_font_styles():
     ax.set_xticks([])
     ax.set_yticks([])
 
-    fig.savefig('font_styles')
+    fig.savefig(os.path.join(image_path, 'font_styles'))
 
 @image_comparison(baseline_images=['multiline'])
-def test_multiline():
+def test_multiline(image_path):
     fig = plt.figure()
     ax = plt.subplot( 1, 1, 1 )
     ax.set_title("multiline\ntext alignment")
@@ -73,4 +74,4 @@ def test_multiline():
     ax.set_xticks([])
     ax.set_yticks([])
 
-    fig.savefig('multiline')
+    fig.savefig(os.path.join(image_path, 'multiline'))

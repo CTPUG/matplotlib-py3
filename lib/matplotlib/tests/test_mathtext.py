@@ -1,3 +1,4 @@
+import os.path
 import numpy as np
 import matplotlib
 from matplotlib.testing.decorators import image_comparison, knownfailureif
@@ -92,25 +93,25 @@ def _run_all_tests():
     return fig
 
 @image_comparison(baseline_images=['mathtext'])
-def test_mathtext():
+def test_mathtext(image_path):
     fig = _run_all_tests()
-    fig.savefig('mathtext')
+    fig.savefig(os.path.join(image_path, 'mathtext'))
 
 @image_comparison(baseline_images=['mathtext_stix'])
-def test_mathtext_stix():
+def test_mathtext_stix(image_path):
     matplotlib.rcParams['mathtext.fontset'] = 'stix'
 
     fig = _run_all_tests()
-    fig.savefig('mathtext_stix')
+    fig.savefig(os.path.join(image_path, 'mathtext_stix'))
 
     matplotlib.rcParams['mathtext.fontset'] = 'cm'
 
 @image_comparison(baseline_images=['mathtext_stixsans'])
-def test_mathtext_stixsans():
+def test_mathtext_stixsans(image_path):
     matplotlib.rcParams['mathtext.fontset'] = 'stixsans'
 
     fig = _run_all_tests()
-    fig.savefig('mathtext_stixsans')
+    fig.savefig(os.path.join(image_path, 'mathtext_stixsans'))
 
     matplotlib.rcParams['mathtext.fontset'] = 'cm'
 

@@ -105,13 +105,7 @@ def image_comparison(baseline_images=None,extensions=None,tol=1e-3):
                 def decorated_compare_images():
                     # set the default format of savefig
                     matplotlib.rc('savefig', extension=extension)
-                    # change to the result directory for the duration of the test
-                    old_dir = os.getcwd()
-                    os.chdir(result_dir)
-                    try:
-                        result = func() # actually call the test function
-                    finally:
-                        os.chdir(old_dir)
+                    result = func(result_dir) # actually call the test function
                     for actual,expected in zip(actual_fnames,expected_fnames):
                         if not os.path.exists(expected):
                             raise ImageComparisonFailure(

@@ -9,7 +9,7 @@ import io
 import os
 
 @image_comparison(baseline_images=['image_interps'])
-def test_image_interps():
+def test_image_interps(image_path):
     'make the basic nearest, bilinear and bicubic interps'
     X = np.arange(100)
     X = X.reshape(5, 20)
@@ -28,10 +28,10 @@ def test_image_interps():
     ax3.imshow(X, interpolation='bicubic')
     ax3.set_ylabel('bicubic')
 
-    fig.savefig('image_interps')
+    fig.savefig(os.path.join(image_path, 'image_interps'))
 
 @image_comparison(baseline_images=['figimage-0', 'figimage-1'], extensions=['png'], tol=1.5e-3)
-def test_figimage():
+def test_figimage(image_path):
     'test the figimage method'
 
     for suppressComposite in False, True:
@@ -47,7 +47,7 @@ def test_figimage():
         fig.figimage(img[:,::-1], xo=100, yo=0, origin='lower')
         fig.figimage(img[::-1,::-1], xo=100, yo=100, origin='lower')
 
-        fig.savefig('figimage-%d' % int(suppressComposite), dpi=100)
+        fig.savefig(os.path.join(image_path, 'figimage-%d' % int(suppressComposite)), dpi=100)
 
 def test_image_python_io():
     fig = plt.figure()
@@ -97,7 +97,7 @@ def test_imsave():
     assert_array_equal(arr_dpi1, arr_dpi100)
 
 @image_comparison(baseline_images=['image_clip'])
-def test_image_clip():
+def test_image_clip(image_path):
     from math import pi
 
     fig = plt.figure()
@@ -107,10 +107,10 @@ def test_image_clip():
 
     im = ax.imshow(d, extent=(-pi,pi,-pi/2,pi/2))
 
-    fig.savefig('image_clip')
+    fig.savefig(os.path.join(image_path, 'image_clip'))
 
 @image_comparison(baseline_images=['imshow'])
-def test_imshow():
+def test_imshow(image_path):
     import numpy as np
     import matplotlib.pyplot as plt
 
@@ -121,7 +121,7 @@ def test_imshow():
     ax.set_xlim(0,3)
     ax.set_ylim(0,3)
 
-    fig.savefig('imshow')
+    fig.savefig(os.path.join(image_path, 'imshow'))
 
 if __name__=='__main__':
     import nose

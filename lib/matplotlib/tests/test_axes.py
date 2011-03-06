@@ -1,3 +1,4 @@
+import os.path
 import numpy as np
 from numpy import ma
 import matplotlib
@@ -11,7 +12,7 @@ import matplotlib.pyplot as plt
                                    'formatter_ticker_004',
                                    'formatter_ticker_005',
                                    ])
-def test_formatter_ticker():
+def test_formatter_ticker(image_path):
     import matplotlib.testing.jpl_units as units
     units.register()
 
@@ -24,26 +25,26 @@ def test_formatter_ticker():
     fig = plt.figure()
     ax = plt.subplot( 111 )
     ax.set_xlabel( "x-label 001" )
-    fig.savefig( 'formatter_ticker_001' )
+    fig.savefig(os.path.join(image_path,  'formatter_ticker_001' ))
 
     ax.plot( xdata, ydata1, color='blue', xunits="sec" )
-    fig.savefig( 'formatter_ticker_002' )
+    fig.savefig(os.path.join(image_path,  'formatter_ticker_002' ))
 
     ax.set_xlabel( "x-label 003" )
-    fig.savefig( 'formatter_ticker_003' )
+    fig.savefig(os.path.join(image_path,  'formatter_ticker_003' ))
 
     ax.plot( xdata, ydata2, color='green', xunits="hour" )
     ax.set_xlabel( "x-label 004" )
-    fig.savefig( 'formatter_ticker_004' )
+    fig.savefig(os.path.join(image_path,  'formatter_ticker_004' ))
 
     # See SF bug 2846058
     # https://sourceforge.net/tracker/?func=detail&aid=2846058&group_id=80706&atid=560720
     ax.set_xlabel( "x-label 005" )
     ax.autoscale_view()
-    fig.savefig( 'formatter_ticker_005' )
+    fig.savefig(os.path.join(image_path,  'formatter_ticker_005' ))
 
 @image_comparison(baseline_images=['offset_points'])
-def test_basic_annotate():
+def test_basic_annotate(image_path):
     # Setup some data
     t = np.arange( 0.0, 5.0, 0.01 )
     s = np.cos( 2.0*np.pi * t )
@@ -57,10 +58,10 @@ def test_basic_annotate():
     ax.annotate( 'local max', xy=(3, 1), xycoords='data',
                  xytext=(3, 3), textcoords='offset points' )
 
-    fig.savefig( 'offset_points' )
+    fig.savefig(os.path.join(image_path,  'offset_points' ))
 
 @image_comparison(baseline_images=['polar_axes'])
-def test_polar_annotations():
+def test_polar_annotations(image_path):
     # you can specify the xypoint and the xytext in different
     # positions and coordinate systems, and optionally turn on a
     # connecting line and mark the point with a marker.  Annotations
@@ -91,11 +92,11 @@ def test_polar_annotations():
                 verticalalignment='baseline',
                 )
 
-    fig.savefig( 'polar_axes' )
+    fig.savefig(os.path.join(image_path,  'polar_axes' ))
 
    #--------------------------------------------------------------------
 @image_comparison(baseline_images=['polar_coords'])
-def test_polar_coord_annotations():
+def test_polar_coord_annotations(image_path):
     # You can also use polar notation on a catesian axes.  Here the
     # native coordinate system ('data') is cartesian, so you need to
     # specify the xycoords and textcoords as 'polar' if you want to
@@ -122,10 +123,10 @@ def test_polar_coord_annotations():
 
     ax.set_xlim( -20, 20 )
     ax.set_ylim( -20, 20 )
-    fig.savefig( 'polar_coords' )
+    fig.savefig(os.path.join(image_path,  'polar_coords' ))
 
 @image_comparison(baseline_images=['fill_units'])
-def test_fill_units():
+def test_fill_units(image_path):
     from datetime import datetime
     import matplotlib.testing.jpl_units as units
     units.register()
@@ -163,10 +164,10 @@ def test_fill_units():
               facecolor="blue" )
 
     fig.autofmt_xdate()
-    fig.savefig( 'fill_units' )
+    fig.savefig(os.path.join(image_path,  'fill_units' ))
 
 @image_comparison(baseline_images=['single_point'])
-def test_single_point():
+def test_single_point(image_path):
     fig = plt.figure()
     plt.subplot( 211 )
     plt.plot( [0], [0], 'o' )
@@ -174,10 +175,10 @@ def test_single_point():
     plt.subplot( 212 )
     plt.plot( [1], [1], 'o' )
 
-    fig.savefig( 'single_point' )
+    fig.savefig(os.path.join(image_path,  'single_point' ))
 
 @image_comparison(baseline_images=['single_date'])
-def test_single_date():
+def test_single_date(image_path):
     time1=[ 721964.0 ]
     data1=[ -65.54 ]
 
@@ -188,10 +189,10 @@ def test_single_date():
     plt.subplot( 212 )
     plt.plot( time1, data1, 'o', color='r' )
 
-    fig.savefig( 'single_date' )
+    fig.savefig(os.path.join(image_path,  'single_date' ))
 
 @image_comparison(baseline_images=['shaped_data'])
-def test_shaped_data():
+def test_shaped_data(image_path):
     xdata = np.array([[ 0.53295185,  0.23052951,  0.19057629,  0.66724975,  0.96577916,
                         0.73136095,  0.60823287,  0.017921  ,  0.29744742,  0.27164665],
                       [ 0.2798012 ,  0.25814229,  0.02818193,  0.12966456,  0.57446277,
@@ -232,10 +233,10 @@ def test_shaped_data():
     plt.subplot( 414 )
     plt.plot( xdata[:,1], xdata[1,:], 'o' )
 
-    fig.savefig( 'shaped_data' )
+    fig.savefig(os.path.join(image_path,  'shaped_data' ))
 
 @image_comparison(baseline_images=['const_xy'])
-def test_const_xy():
+def test_const_xy(image_path):
     fig = plt.figure()
 
     plt.subplot( 311 )
@@ -247,12 +248,12 @@ def test_const_xy():
     plt.subplot( 313 )
     plt.plot( np.ones( (10,) ), np.ones( (10,) ), 'o' )
 
-    fig.savefig( 'const_xy' )
+    fig.savefig(os.path.join(image_path,  'const_xy' ))
 
 @image_comparison(baseline_images=['polar_wrap_180',
                                    'polar_wrap_360',
                                    ])
-def test_polar_wrap():
+def test_polar_wrap(image_path):
     D2R = np.pi / 180.0
 
     fig = plt.figure()
@@ -263,7 +264,7 @@ def test_polar_wrap():
     plt.polar( [179*D2R,  181*D2R], [0.2, 0.1], "g.-" )
     plt.rgrids( [0.05, 0.1, 0.15, 0.2, 0.25, 0.3] )
 
-    fig.savefig( 'polar_wrap_180' )
+    fig.savefig(os.path.join(image_path,  'polar_wrap_180' ))
 
     fig = plt.figure()
 
@@ -274,10 +275,10 @@ def test_polar_wrap():
     plt.polar( [358*D2R,  2*D2R], [0.2, 0.1], "r.-" )
     plt.rgrids( [0.05, 0.1, 0.15, 0.2, 0.25, 0.3] )
 
-    fig.savefig( 'polar_wrap_360' )
+    fig.savefig(os.path.join(image_path,  'polar_wrap_360' ))
 
 @image_comparison(baseline_images=['polar_units'])
-def test_polar_units():
+def test_polar_units(image_path):
     import matplotlib.testing.jpl_units as units
     from nose.tools import assert_true
     units.register()
@@ -299,7 +300,7 @@ def test_polar_units():
     # polar( x2, y1, color = "red", xunits="rad" )
     # polar( x2, y2, color = "green" )
 
-    fig.savefig( 'polar_units' )
+    fig.savefig(os.path.join(image_path,  'polar_units' ))
 
     # make sure runits and theta units work
     y1 = [ y*km for y in y1 ]
@@ -308,7 +309,7 @@ def test_polar_units():
 
 
 @image_comparison(baseline_images=['polar_rmin'])
-def test_polar_rmin():
+def test_polar_rmin(image_path):
     r = np.arange(0, 3.0, 0.01)
     theta = 2*np.pi*r
 
@@ -318,10 +319,10 @@ def test_polar_rmin():
     ax.set_rmax(2.0)
     ax.set_rmin(0.5)
 
-    fig.savefig('polar_rmin')
+    fig.savefig(os.path.join(image_path, 'polar_rmin'))
 
 @image_comparison(baseline_images=['axvspan_epoch'])
-def test_axvspan_epoch():
+def test_axvspan_epoch(image_path):
     from datetime import datetime
     import matplotlib.testing.jpl_units as units
     units.register()
@@ -339,10 +340,10 @@ def test_axvspan_epoch():
     ax = plt.gca()
     ax.set_xlim( t0 - 5.0*dt, tf + 5.0*dt )
 
-    fig.savefig( 'axvspan_epoch' )
+    fig.savefig(os.path.join(image_path,  'axvspan_epoch' ))
 
 @image_comparison(baseline_images=['axhspan_epoch'])
-def test_axhspan_epoch():
+def test_axhspan_epoch(image_path):
     from datetime import datetime
     import matplotlib.testing.jpl_units as units
     units.register()
@@ -360,11 +361,11 @@ def test_axhspan_epoch():
     ax = plt.gca()
     ax.set_ylim( t0 - 5.0*dt, tf + 5.0*dt )
 
-    fig.savefig( 'axhspan_epoch' )
+    fig.savefig(os.path.join(image_path,  'axhspan_epoch' ))
 
 
 @image_comparison(baseline_images=['hexbin_extent'])
-def test_hexbin_extent():
+def test_hexbin_extent(image_path):
     # this test exposes sf bug 2856228
     fig = plt.figure()
 
@@ -374,20 +375,20 @@ def test_hexbin_extent():
     x, y = data
 
     ax.hexbin(x, y, extent=[.1, .3, .6, .7])
-    fig.savefig('hexbin_extent')
+    fig.savefig(os.path.join(image_path, 'hexbin_extent'))
 
 @image_comparison(baseline_images=['nonfinite_limits'])
-def test_nonfinite_limits():
+def test_nonfinite_limits(image_path):
     x = np.arange(0., np.e, 0.01)
     y = np.log(x)
     x[len(x)/2] = np.nan
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.plot(x, y)
-    fig.savefig('nonfinite_limits')
+    fig.savefig(os.path.join(image_path, 'nonfinite_limits'))
 
 @image_comparison(baseline_images=['imshow'])
-def test_imshow():
+def test_imshow(image_path):
     #Create a NxN image
     N=100
     (x,y) = np.indices((N,N))
@@ -400,10 +401,10 @@ def test_imshow():
     ax = fig.add_subplot(111)
 
     ax.imshow(r)
-    fig.savefig('imshow')
+    fig.savefig(os.path.join(image_path, 'imshow'))
 
 @image_comparison(baseline_images=['imshow_clip'], tol=1e-2)
-def test_imshow_clip():
+def test_imshow_clip(image_path):
     # As originally reported by Gellule Xg <gellule.xg@free.fr>
 
     #Create a NxN image
@@ -427,10 +428,10 @@ def test_imshow_clip():
 
     #Plot the image clipped by the contour
     ax.imshow(r, clip_path=clip_path)
-    fig.savefig('imshow_clip')
+    fig.savefig(os.path.join(image_path, 'imshow_clip'))
 
 @image_comparison(baseline_images=['polycollection_joinstyle'])
-def test_polycollection_joinstyle():
+def test_polycollection_joinstyle(image_path):
     # Bug #2890979 reported by Matthew West
 
     from matplotlib import collections as mcoll
@@ -445,10 +446,10 @@ def test_polycollection_joinstyle():
     ax.set_xticks([])
     ax.set_yticks([])
 
-    fig.savefig('polycollection_joinstyle')
+    fig.savefig(os.path.join(image_path, 'polycollection_joinstyle'))
 
 @image_comparison(baseline_images=['fill_between_interpolate'], tol=1e-2)
-def test_fill_between_interpolate():
+def test_fill_between_interpolate(image_path):
     x = np.arange(0.0, 2, 0.02)
     y1 = np.sin(2*np.pi*x)
     y2 = 1.2*np.sin(4*np.pi*x)
@@ -466,10 +467,10 @@ def test_fill_between_interpolate():
     ax1.fill_between(x, y1, y2, where=y2>=y1, facecolor='green', interpolate=True)
     ax1.fill_between(x, y1, y2, where=y2<=y1, facecolor='red', interpolate=True)
 
-    fig.savefig('fill_between_interpolate')
+    fig.savefig(os.path.join(image_path, 'fill_between_interpolate'))
 
 @image_comparison(baseline_images=['symlog'])
-def test_symlog():
+def test_symlog(image_path):
     x = np.array([0,1,2,4,6,9,12,24])
     y = np.array([1000000, 500000, 100000, 100, 5, 0, 0, 0])
 
@@ -480,10 +481,10 @@ def test_symlog():
     ax.set_xscale=('linear')
     ax.set_ylim(-1,10000000)
 
-    fig.savefig('symlog')
+    fig.savefig(os.path.join(image_path, 'symlog'))
 
 @image_comparison(baseline_images=['pcolormesh'], tol=0.02)
-def test_pcolormesh():
+def test_pcolormesh(image_path):
     n = 12
     x = np.linspace(-1.5,1.5,n)
     y = np.linspace(-1.5,1.5,n*2)
@@ -510,14 +511,14 @@ def test_pcolormesh():
     ax.set_xticks([])
     ax.set_yticks([])
 
-    fig.savefig('pcolormesh')
+    fig.savefig(os.path.join(image_path, 'pcolormesh'))
 
 
 @image_comparison(baseline_images=['canonical'])
-def test_canonical():
+def test_canonical(image_path):
     fig, ax = plt.subplots()
     ax.plot([1,2,3])
-    fig.savefig('canonical')
+    fig.savefig(os.path.join(image_path, 'canonical'))
 
 if __name__=='__main__':
     import nose

@@ -1,10 +1,11 @@
+import os.path
 import numpy as np
 import matplotlib
 from matplotlib.testing.decorators import image_comparison
 import matplotlib.pyplot as plt
 
 @image_comparison(baseline_images=['spines_axes_positions'])
-def test_spines_axes_positions():
+def test_spines_axes_positions(image_path):
     # SF bug 2852168
     fig = plt.figure()
     x = np.linspace(0,2*np.pi,100)
@@ -18,4 +19,4 @@ def test_spines_axes_positions():
     ax.xaxis.set_ticks_position('top')
     ax.spines['left'].set_color('none')
     ax.spines['bottom'].set_color('none')
-    fig.savefig('spines_axes_positions')
+    fig.savefig(os.path.join(image_path, 'spines_axes_positions'))
