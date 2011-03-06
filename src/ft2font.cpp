@@ -6,8 +6,8 @@
 
 #include "numpy/arrayobject.h"
 
-#define FIXED_MAJOR(val) (*((short *) &val+1))
-#define FIXED_MINOR(val) (*((short *) &val+0))
+#define FIXED_MAJOR(val) (*((unsigned long*) &val+1))
+#define FIXED_MINOR(val) (*((unsigned long*) &val+0))
 
 /**
  To improve the hinting of the fonts, this code uses a hack
