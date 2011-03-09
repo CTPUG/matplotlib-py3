@@ -9,7 +9,7 @@ on how to use these modules.
 '''
 
 # The Olson database is updated several times a year.
-OLSON_VERSION = '2011b'
+OLSON_VERSION = '2011c'
 VERSION = OLSON_VERSION
 # Version format for a patch release - only one so far.
 #VERSION = OLSON_VERSION + '.2'
@@ -46,14 +46,39 @@ from pytz.tzfile import build_tzinfo, _byte_string
 
 try:
     unicode
-except NameError:
+
+except NameError: # Python 3.x
+
     # Python 3.x doesn't have unicode(), making writing code
     # for Python 2.3 and Python 3.x a pain.
-    def unicode(s):
-        try:
-            return s.decode('unicode_escape')
-        except AttributeError:
-            return str(s)
+    unicode = str
+
+    def ascii(s):
+        r"""
+        >>> ascii('Hello')
+        'Hello'
+        >>> ascii('\N{TRADE MARK SIGN}') #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        UnicodeEncodeError: ...
+        """
+        s.encode('US-ASCII') # Raise an exception if not ASCII
+        return s # But return the original string - not a byte string.
+
+else: # Python 2.x
+
+    def ascii(s):
+        r"""
+        >>> ascii('Hello')
+        'Hello'
+        >>> ascii(u'Hello')
+        'Hello'
+        >>> ascii(u'\N{TRADE MARK SIGN}') #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+            ...
+        UnicodeEncodeError: ...
+        """
+        return s.encode('US-ASCII')
 
 
 def open_resource(name):
@@ -79,7 +104,7 @@ def open_resource(name):
 def resource_exists(name):
     """Return true if the given resource exists"""
     try:
-        open_resource(name)
+        open_resource(name).close()
         return True
     except IOError:
         return False
@@ -143,7 +168,7 @@ def timezone(zone):
         return utc
 
     try:
-        zone.encode('US-ASCII')
+        zone = ascii(zone)
     except UnicodeEncodeError:
         # All valid timezones are ASCII
         raise UnknownTimeZoneError(zone)
@@ -151,7 +176,11 @@ def timezone(zone):
     zone = _unmunge_zone(zone)
     if zone not in _tzinfo_cache:
         if zone in all_timezones_set:
-            _tzinfo_cache[zone] = build_tzinfo(zone, open_resource(zone))
+            fp = open_resource(zone)
+            try:
+                _tzinfo_cache[zone] = build_tzinfo(zone, fp)
+            finally:
+                fp.close()
         else:
             raise UnknownTimeZoneError(zone)
 
@@ -328,18 +357,21 @@ class _CountryTimezoneDict(_LazyDict):
     def _fill(self):
         data = {}
         zone_tab = open_resource('zone.tab')
-        for line in zone_tab:
-            line = line.decode('US-ASCII')
-            if line.startswith('#'):
-                continue
-            code, coordinates, zone = line.split(None, 4)[:3]
-            if zone not in all_timezones_set:
-                continue
-            try:
-                data[code].append(zone)
-            except KeyError:
-                data[code] = [zone]
-        self.data = data
+        try:
+            for line in zone_tab:
+                line = line.decode('US-ASCII')
+                if line.startswith('#'):
+                    continue
+                code, coordinates, zone = line.split(None, 4)[:3]
+                if zone not in all_timezones_set:
+                    continue
+                try:
+                    data[code].append(zone)
+                except KeyError:
+                    data[code] = [zone]
+            self.data = data
+        finally:
+            zone_tab.close()
 
 country_timezones = _CountryTimezoneDict()
 
@@ -353,13 +385,16 @@ class _CountryNameDict(_LazyDict):
     def _fill(self):
         data = {}
         zone_tab = open_resource('iso3166.tab')
-        for line in zone_tab.readlines():
-            line = line.decode('US-ASCII')
-            if line.startswith('#'):
-                continue
-            code, name = line.split(None, 1)
-            data[code] = name.strip()
-        self.data = data
+        try:
+            for line in zone_tab.readlines():
+                line = line.decode('US-ASCII')
+                if line.startswith('#'):
+                    continue
+                code, name = line.split(None, 1)
+                data[code] = name.strip()
+            self.data = data
+        finally:
+            zone_tab.close()
 
 country_names = _CountryNameDict()
 
@@ -637,6 +672,7 @@ all_timezones = \
  'America/Mendoza',
  'America/Menominee',
  'America/Merida',
+ 'America/Metlakatla',
  'America/Mexico_City',
  'America/Miquelon',
  'America/Moncton',
@@ -676,6 +712,7 @@ all_timezones = \
  'America/Sao_Paulo',
  'America/Scoresbysund',
  'America/Shiprock',
+ 'America/Sitka',
  'America/St_Barthelemy',
  'America/St_Johns',
  'America/St_Kitts',
@@ -1195,6 +1232,7 @@ common_timezones = \
  'America/Mazatlan',
  'America/Menominee',
  'America/Merida',
+ 'America/Metlakatla',
  'America/Mexico_City',
  'America/Miquelon',
  'America/Moncton',
@@ -1232,6 +1270,7 @@ common_timezones = \
  'America/Sao_Paulo',
  'America/Scoresbysund',
  'America/Shiprock',
+ 'America/Sitka',
  'America/St_Barthelemy',
  'America/St_Johns',
  'America/St_Kitts',
