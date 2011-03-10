@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-import os.path
-
 import numpy as np
 import matplotlib
 from matplotlib.testing.decorators import image_comparison, knownfailureif
@@ -21,7 +19,7 @@ Path = path.Path
 # (the default)
 
 @image_comparison(baseline_images=['clipping'])
-def test_clipping(image_dir):
+def test_clipping():
     t = np.arange(0.0, 2.0, 0.01)
     s = np.sin(2*pi*t)
 
@@ -31,10 +29,10 @@ def test_clipping(image_dir):
     ax.set_ylim((-0.20, -0.28))
     ax.set_xticks([])
     ax.set_yticks([])
-    fig.savefig(os.path.join(image_dir, 'clipping'))
+    fig.savefig('clipping')
 
 @image_comparison(baseline_images=['overflow'], tol=1e-2)
-def test_overflow(image_dir):
+def test_overflow():
     x = np.array([1.0,2.0,3.0,2.0e5])
     y = np.arange(len(x))
 
@@ -45,10 +43,10 @@ def test_overflow(image_dir):
     ax.set_xticks([])
     ax.set_yticks([])
 
-    fig.savefig(os.path.join(image_dir, 'overflow'))
+    fig.savefig('overflow')
 
 @image_comparison(baseline_images=['clipping_diamond'])
-def test_diamond(image_path):
+def test_diamond():
     x = np.array([0.0, 1.0, 0.0, -1.0, 0.0])
     y = np.array([1.0, 0.0, -1.0, 0.0, 1.0])
 
@@ -60,7 +58,7 @@ def test_diamond(image_path):
     ax.set_xticks([])
     ax.set_yticks([])
 
-    fig.savefig(os.path.join(image_path, 'clipping_diamond'))
+    fig.savefig('clipping_diamond')
 
 def test_noise():
     np.random.seed(0)
@@ -97,7 +95,7 @@ def test_sine_plus_noise():
     assert len(simplified) == 876
 
 @image_comparison(baseline_images=['simplify_curve'])
-def test_simplify_curve(image_path):
+def test_simplify_curve():
     pp1 = patches.PathPatch(
         Path([(0, 0), (1, 0), (1, 1), (nan, 1), (0, 0), (2, 0), (2, 2), (0, 0)],
              [Path.MOVETO, Path.CURVE3, Path.CURVE3, Path.CURVE3, Path.CURVE3, Path.CURVE3, Path.CURVE3, Path.CLOSEPOLY]),
@@ -111,20 +109,20 @@ def test_simplify_curve(image_path):
     ax.set_xlim((0, 2))
     ax.set_ylim((0, 2))
 
-    fig.savefig(os.path.join(image_path, 'simplify_curve'))
+    fig.savefig('simplify_curve')
 
 @image_comparison(baseline_images=['hatch_simplify'])
-def test_hatch(image_path):
+def test_hatch():
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.add_patch(Rectangle((0, 0), 1, 1, fill=False, hatch="/"))
     ax.set_xlim((0.45, 0.55))
     ax.set_ylim((0.45, 0.55))
 
-    fig.savefig(os.path.join(image_path, 'hatch_simplify'))
+    fig.savefig('hatch_simplify')
 
 @image_comparison(baseline_images=['fft_peaks'])
-def test_fft_peaks(image_path):
+def test_fft_peaks():
     fig = plt.figure()
     t = arange(65536)
     ax = fig.add_subplot(111)
@@ -132,7 +130,7 @@ def test_fft_peaks(image_path):
     ax.set_xticks([])
     ax.set_yticks([])
 
-    fig.savefig(os.path.join(image_path, 'fft_peaks'))
+    fig.savefig('fft_peaks')
 
     path = p1[0].get_path()
     transform = p1[0].get_transform()
@@ -196,7 +194,7 @@ def test_throw_rendering_complexity_exceeded():
         rcParams['path.simplify'] = True
 
 @image_comparison(baseline_images=['clipper_edge'])
-def test_clipper(image_path):
+def test_clipper():
     dat = (0, 1, 0, 2, 0, 3, 0, 4, 0, 5)
     fig = plt.figure(figsize=(2, 1))
     fig.subplots_adjust(left = 0, bottom = 0, wspace = 0, hspace = 0)
@@ -211,10 +209,10 @@ def test_clipper(image_path):
     ax.yaxis.set_ticks_position('left')
 
     ax.set_xlim(5, 9)
-    fig.savefig(os.path.join(image_path, 'clipper_edge'))
+    fig.savefig('clipper_edge')
 
 @image_comparison(baseline_images=['para_equal_perp'])
-def test_para_equal_perp(image_path):
+def test_para_equal_perp():
     x = np.array([0, 1, 2, 1, 0, -1, 0, 1] + [1] * 128)
     y = np.array([1, 1, 2, 1, 0, -1, 0, 0] + [0] * 128)
 
@@ -222,7 +220,7 @@ def test_para_equal_perp(image_path):
     ax = fig.add_subplot(111)
     ax.plot(x + 1, y + 1)
     ax.plot(x + 1, y + 1, 'ro')
-    fig.savefig(os.path.join(image_path, 'para_equal_perp'))
+    fig.savefig('para_equal_perp')
 
 if __name__=='__main__':
     import nose
