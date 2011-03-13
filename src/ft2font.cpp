@@ -6,8 +6,12 @@
 
 #include "numpy/arrayobject.h"
 
-#define FIXED_MAJOR(val) (*((unsigned long*) &val+1))
-#define FIXED_MINOR(val) (*((unsigned long*) &val+0))
+/*
+ By definition, FT_FIXED as 2 16bit values stored in a single long.
+ We cast to long to ensure the correct Py::Int convertor is called
+ */
+#define FIXED_MAJOR(val) (*((long*) ((val & 0xffff000) >> 16)))
+#define FIXED_MINOR(val) (*((long*) (val & 0xffff)))
 
 /**
  To improve the hinting of the fonts, this code uses a hack
