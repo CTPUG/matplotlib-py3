@@ -470,6 +470,8 @@ Py::PythonClassObject<Glyph> Glyph::factory(
     Py_INCREF(obj.ptr());
     Glyph* o = obj.getCxxObject();
 
+    o->glyphInd = ind;
+
     FT_BBox bbox;
     FT_Glyph_Get_CBox(glyph, ft_glyph_bbox_subpixels, &bbox);
 
@@ -1506,7 +1508,9 @@ FT2Font::draw_glyph_to_bitmap(const Py::Tuple & args)
     {
         throw Py::TypeError("Usage: draw_glyph_to_bitmap(bitmap, x,y,glyph)");
     }
-    FT2Image* im = static_cast<FT2Image*>(args[0].ptr());
+
+    FT2Image* im = static_cast<FT2Image*>(
+          Py::getPythonExtensionBase(args[0].ptr()));
 
     double xd = Py::Float(args[1]);
     double yd = Py::Float(args[2]);
@@ -1520,7 +1524,9 @@ FT2Font::draw_glyph_to_bitmap(const Py::Tuple & args)
     {
         throw Py::TypeError("Usage: draw_glyph_to_bitmap(bitmap, x,y,glyph)");
     }
-    Glyph* glyph = static_cast<Glyph*>(args[3].ptr());
+
+    Glyph* glyph = static_cast<Glyph*>(
+          Py::getPythonExtensionBase(args[3].ptr()));
 
     if ((size_t)glyph->glyphInd >= glyphs.size())
     {
