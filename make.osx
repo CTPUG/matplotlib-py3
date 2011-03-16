@@ -32,10 +32,9 @@ clean:
 	build
 
 
-
 fetch:
 	${PYTHON} -c 'import urllib; urllib.urlretrieve("http://superb-sea2.dl.sourceforge.net/project/libpng/zlib/${ZLIBVERSION}/zlib-${ZLIBVERSION}.tar.gz", "zlib-${ZLIBVERSION}.tar.gz")'  &&\
-	${PYTHON} -c 'import urllib; urllib.urlretrieve("http://sourceforge.net/projects/libpng/files/libpng-stable/${PNGVERSION}/libpng-${PNGVERSION}.tar.gz/download", "libpng-${PNGVERSION}.tar.gz")' &&\
+	${PYTHON} -c 'import urllib; urllib.urlretrieve("http://sourceforge.net/projects/libpng/files/libpng12/older-releases/${PNGVERSION}/libpng-${PNGVERSION}.tar.gz/download", "libpng-${PNGVERSION}.tar.gz")' &&\
 	${PYTHON} -c 'import urllib; urllib.urlretrieve("http://download.savannah.gnu.org/releases/freetype/freetype-${FREETYPEVERSION}.tar.bz2", "freetype-${FREETYPEVERSION}.tar.bz2")'
 
 
@@ -44,7 +43,7 @@ fetch:
 zlib: check-prefix
 	export PKG_CONFIG_PATH=${PKG_CONFIG_PATH} &&\
 	rm -rf zlib-${ZLIBVERSION} &&\
-	tar xvfz zlib-${ZLIBVERSION}.tar.gz &&\
+	tar xvzf zlib-${ZLIBVERSION}.tar.gz &&\
 	cd zlib-${ZLIBVERSION} &&\
 	export MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} &&\
 	export CFLAGS=${CFLAGS} &&\
@@ -56,7 +55,7 @@ zlib: check-prefix
 png: zlib check-prefix
 	export PKG_CONFIG_PATH=${PKG_CONFIG_PATH} &&\
 	rm -rf libpng-${PNGVERSION} &&\
-	tar xvfz libpng-${PNGVERSION}.tar.gz && \
+	tar xvzf libpng-${PNGVERSION}.tar.gz && \
 	cd libpng-${PNGVERSION} &&\
 	export MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} &&\
 	export CFLAGS=${CFLAGS} &&\
@@ -70,7 +69,7 @@ png: zlib check-prefix
 freetype: zlib check-prefix
 	export PKG_CONFIG_PATH=${PKG_CONFIG_PATH} &&\
 	rm -rf ${FREETYPEVERSION} &&\
-	tar xvfj freetype-${FREETYPEVERSION}.tar.bz2 &&\
+	tar xvjf freetype-${FREETYPEVERSION}.tar.bz2 &&\
 	cd freetype-${FREETYPEVERSION} &&\
 	export MACOSX_DEPLOYMENT_TARGET=${MACOSX_DEPLOYMENT_TARGET} &&\
 	export CFLAGS=${CFLAGS} &&\
