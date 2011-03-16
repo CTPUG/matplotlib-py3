@@ -5,6 +5,14 @@
 #include "numpy/arrayobject.h"
 #include "path_cleanup.h"
 
+
+/* We don't seem to get PY3K from anywhere */
+#if PY_MAJOR_VERSION >= 3
+#define PY3K 1
+#else
+#define PY3K 0
+#endif
+
 /* Must define Py_TYPE for Python 2.5 or older */
 #ifndef Py_TYPE
 # define Py_TYPE(o) ((o)->ob_type)
@@ -14,6 +22,14 @@
 #ifndef PyVarObject_HEAD_INIT
 #define PyVarObject_HEAD_INIT(type, size)       \
         PyObject_HEAD_INIT(type) size,
+#endif
+
+/* Must define PyInt_* for Python 3 or newer */
+#if PY3K
+  #define PyInt_Check PyLong_Check
+  #define PyInt_FromLong PyLong_FromLong
+  #define PyInt_AsLong PyLong_AsLong
+  #define PyInt_AS_LONG PyLong_AS_LONG
 #endif
 
 /* Proper way to check for the OS X version we are compiling for, from
@@ -4234,11 +4250,7 @@ NavigationToolbar_get_active (NavigationToolbar* self)
     {
         if(states[i]==1)
         {
-#if PY3K
-            PyList_SET_ITEM(list, j, PyLong_FromLong(i));
-#else
             PyList_SET_ITEM(list, j, PyInt_FromLong(i));
-#endif
             j++;
         }
     }
@@ -5734,7 +5746,7 @@ static PyTypeObject TimerType = {
     Timer_new,                 /* tp_new */
 };
 
-static struct PyMethodDef methods[] = {
+static PyMethodDef methods[] = {
    {"show",
     (PyCFunction)show,
     METH_NOARGS,
@@ -5760,7 +5772,7 @@ static struct PyMethodDef methods[] = {
 
 #if PY3K
 
-static struct PyModuleDef moduledef = {
+static PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT,
     "_macosx",
     "Mac OS X native backend",
@@ -5772,7 +5784,7 @@ static struct PyModuleDef moduledef = {
     NULL
 };
 
-PyObject* PyInit__macosx(void)
+PyMODINIT_FUNC PyInit__macosx(void)
 
 #else
 
@@ -5819,4 +5831,8 @@ void init_macosx(void)
     PyModule_AddObject(module, "Timer", (PyObject*) &TimerType);
 
     PyOS_InputHook = wait_for_stdin;
+
+#if PY3K
+    return module;
+#endif
 }
